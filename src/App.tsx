@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import {calculate_vars, exercicedata_t, get_step_text, replace_text_with_vars} from "./core/exercice";
+import ExerciceContent from './ExerciceContent';
 
 import math_lib from "./libraries/maths";
 
@@ -22,8 +23,9 @@ function App() {
   };
   */
 
+  /*
   const exampleData: exercicedata_t = {
-    text: "<h1>Résoudre $A x + $B = 0</h1>",
+    text: "Résoudre $A x + $B = 0",
     vars: {
       input: [
         {name: "A", gen: "Math.floor(Math.random() * 10 + 1)"},
@@ -70,6 +72,67 @@ function App() {
     ],
     result: "x = $RST"
   }
+  */
+
+  const exampleData: exercicedata_t = {
+    text: "Donne une écriture décimale qui correspond à<br />$EQX",
+    vars: {
+      input: [
+        {name: "EQA", gen: "Math.floor(Math.random() * 8 + 1)"},
+        {name: "EQB", gen: "Math.floor(Math.random() * 8 + 1)"},
+        {name: "EQC", gen: "Math.floor(Math.random() * 8 + 1)"},
+        {name: "EQD", gen: "Math.floor(Math.random() * 8 + 1)"},
+        {name: "EQX", gen: "'($EQA x 10) + ($EQB x 1) + ($EQC x 0.1) + ($EQD x 0.01)'"},
+      ],
+    },
+    steps: [
+      {
+        action: "$EQA*10",
+        store_to: "EQSA",
+      },
+      {
+        action: "$EQB*1",
+        store_to: "EQSB",
+      },
+      {
+        action: "$EQC*0.1",
+        store_to: "EQSC",
+      },
+      {
+        action: "$EQD*0.01",
+        store_to: "EQSD",
+      },
+      {
+        explanation: "On multiplie $EQA par 10<br />"
+                    +"=> $EQA * 10 = $EQSA<br />"
+                    +"=> ($EQSA) + ($EQB * 1) + ($EQC * 0.1) + ($EQD * 0.01)",
+      },
+      {
+        explanation: "On multiplie $EQB par 1<br />"
+                    +"=> $EQB * 1 = $EQSB<br />"
+                    +"=> ($EQSA) + ($EQSB) + ($EQC * 0.1) + ($EQD * 0.01)",
+      },
+      {
+        explanation: "On multiplie $EQC par 0.1<br />"
+                    +"=> $EQC * 0.1 = $EQSC<br />"
+                    +"=> ($EQSA) + ($EQSB) + ($EQSC) + ($EQD * 0.01)",
+      },
+      {
+        explanation: "On multiplie $EQD par 0.01<br />"
+                    +"=> $EQD * 0.01 = $EQSD<br />"
+                    +"=> ($EQSA) + ($EQSB) + ($EQSC) + ($EQSD)",
+      },
+      {
+        action: "$EQSA + $EQSB + $EQSC + $EQSD",
+        store_to: "EQR",
+      },
+      {
+        explanation: "On ajoute les résultats de toutes les multiplications<br />"
+                    +"=> $EQSA + $EQSB + $EQSC + $EQSD = $EQR<br />",
+      },
+    ],
+    result: "x = $EQR"
+  };
 
   function transform(data: exercicedata_t) {
 
@@ -83,7 +146,7 @@ function App() {
     // CALCULATE THE STEPS
     data.steps?.forEach((e,i) => {
 
-      console.log("STEP", i);
+      //console.log("STEP", i);
       
 
       // Calculate the step definition
@@ -94,57 +157,56 @@ function App() {
       if(!e.store_to){ console.log("no store_to"); return; }
       // eslint-disable-next-line no-eval
 
-      if(!e.condition) {
-        console.log("NO condition");
-      }
-      else
-      {
-        console.log("CONDITION", e.condition);
-        console.log("CONDITION REPL", replace_text_with_vars(e.condition, var_values));
-        console.log("CONDITION EVAL", eval(replace_text_with_vars(e.condition, var_values)));
-        if(eval(replace_text_with_vars(e.condition, var_values))) {
-          console.log("CONDITION OK");
-        } else {
-          console.log("CONDITION KO");
-        }
-      }
+      //if(!e.condition) {
+      //  console.log("NO condition");
+      //}
+      //else
+      //{
+        //console.log("CONDITION", e.condition);
+        //console.log("CONDITION REPL", replace_text_with_vars(e.condition, var_values));
+        //console.log("CONDITION EVAL", eval(replace_text_with_vars(e.condition, var_values)));
+        //if(eval(replace_text_with_vars(e.condition, var_values))) {
+          //console.log("CONDITION OK");
+        //} else {
+          //console.log("CONDITION KO");
+        //}
+      //}
 
       if(!e.condition || eval(replace_text_with_vars(e.condition, var_values))) {
         const calc = eval(replace_text_with_vars(e.action, var_values));
-        console.log("setting var", e.store_to, "to", calc);
+        //console.log("setting var", e.store_to, "to", calc);
         var_values.set(e.store_to, calc);
       }
 
-      console.log("===========================");
+      //console.log("===========================");
     });
 
     // FINAL REPLACEMENT
-    console.log("VAR_VALUES before replacing text ", var_values);
+    //console.log("VAR_VALUES before replacing text ", var_values);
     text = replace_text_with_vars(text, var_values);
-    console.log("text value", text);
+    //console.log("text value", text);
 
     return {text, var_values, steps};
   }
 
-  const [text, set_text] = React.useState(exampleData.text);
 
-  React.useEffect(() => {
-    math_lib();
-    const {text, var_values, steps} = transform(exampleData); 
-    set_text(text); 
-    console.log("VAR_VALUES after replacing text ", var_values);
-  });
+  const [text, setText] = React.useState(exampleData.text);
+  const [var_values, setVarValues] = React.useState(new Map());
+  const [steps, setSteps] = React.useState([] as string[]);
+  const [result, setResult] = React.useState("");
+
+    React.useEffect(() => {
+      math_lib();
+      const {text, var_values, steps} = transform(exampleData);  
+      setText(text);
+      setVarValues(var_values);
+      setSteps(steps);
+      exampleData.result && setResult(replace_text_with_vars(exampleData.result, var_values));
+    }, []);
+
 
   return (
-      <div className="App-header">      
-        <div className="Question" dangerouslySetInnerHTML={{__html:text}} />
-        {/*<div dangerouslySetInnerHTML={{__html:steps.filter(e => e.trim() != "").map((e,i) => {
-          return `<div><h3>Etape ${i+1} :</h3>${e}</div>`;
-        }).join("")}} />
-      <div>{replace_text_with_vars("$A $B $RES", var_values)}</div>
-        <h3 className="Result" dangerouslySetInnerHTML={{__html:exampleData.result ? replace_text_with_vars(exampleData.result, var_values) : ""}} />
-      */}</div>
-      
+    <ExerciceContent text={text} steps={steps} result={result} />    
   );
 }
 

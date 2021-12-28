@@ -36,6 +36,7 @@ export const calculate_vars = (vars:exercicedata_var_t[]): Map<string,string> =>
 
 	vars.forEach(e => {
 		// We can also use any previous already-defined variables for the next ones
+		console.log("calculate_vars:", e.name, e.gen);
 		// eslint-disable-next-line no-eval
 		ret.set(e.name, eval(replace_text_with_vars(e.gen, ret)));
 	});

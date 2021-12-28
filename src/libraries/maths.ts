@@ -10,14 +10,14 @@ export const reduce = (numerator: number, denominator: number): [number,number] 
 }
 export const reducestr = (numerator: string, denominator: string): string => {
 
-    console.log("reduce:", numerator, denominator);
+    //console.log("reduce:", numerator, denominator);
 
     const [n,d] = reduce(parseInt(numerator),parseInt(denominator));
-    console.log(`${numerator}/${denominator} => ${n}/${d}`);
+    //console.log(`${numerator}/${denominator} => ${n}/${d}`);
 
     if(denominator == "1")
     {
-        console.log(`${numerator}/${denominator} => ${n}`);
+        //console.log(`${numerator}/${denominator} => ${n}`);
         return numerator;
     }
 
