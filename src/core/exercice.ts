@@ -2,24 +2,25 @@
 // Structs
 
 export interface exercicedata_var_t {
-	type: string,
 	name: string,
-
-	gen_method: string
+	gen: string
 }
 
 export interface exercicedata_step_t {
-	action: string,
-	store_to: string
+	action?: string,
+	store_to?: string,
+
+	explanation?: string,
+	condition?: string,
 }
 
 export interface exercicedata_t  {
 	text: string;
 	vars: {
 		input: exercicedata_var_t[],    // Input variables are calculated before steps are done
-		output?: exercicedata_var_t[]   // Output variables are calculated after steps are done
 	};
 	steps: exercicedata_step_t[] | null | undefined;
+	result?: string;
 }
 
 // Helpers
@@ -36,7 +37,7 @@ export const calculate_vars = (vars:exercicedata_var_t[]): Map<string,string> =>
 	vars.forEach(e => {
 		// We can also use any previous already-defined variables for the next ones
 		// eslint-disable-next-line no-eval
-		ret.set(e.name, eval(replace_text_with_vars(e.gen_method, ret)));
+		ret.set(e.name, eval(replace_text_with_vars(e.gen, ret)));
 	});
 
 	return ret;
@@ -59,3 +60,22 @@ export const replace_text_with_vars = (text:string, vars:Map<string, string>) =>
 
 	return tmp_text;
 };
+
+export const get_step_text = (step?: exercicedata_step_t, vars?:Map<string, string>) => {
+	
+
+	if(step === undefined || step === null || step.explanation === undefined || step.explanation === null)
+		return "";
+
+	if(vars === undefined)
+		vars = new Map<string, string>();
+
+	if(!step.condition || eval(replace_text_with_vars(step.condition, vars)))
+		return replace_text_with_vars(step.explanation, vars);
+
+	// else // condition is not met
+		// return "CONDITION " + replace_text_with_vars(step.condition, vars) + " ==> " + eval(replace_text_with_vars(step.condition, vars)) + " FAILED";
+		
+	
+	return "";
+}

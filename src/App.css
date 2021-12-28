@@ -20,8 +20,35 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  font-size: calc(10px + 1vmin);
   color: white;
+}
+
+.App-header h3 {
+  font-size: calc(10px + 3vmin);
+  background-image: linear-gradient(90deg, #f3ec78, #db0d47);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; 
+  background-size: 100%;
+  background-repeat: repeat;
+}
+
+.App-header .Question {
+  font-size: calc(10px + 3vmin);
+  background-image: linear-gradient(90deg, #b4fbfd, #6fe2ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; 
+  background-size: 100%;
+  background-repeat: repeat;
+}
+
+.App-header .Result {
+  font-size: calc(10px + 3vmin);
+  background-image: linear-gradient(90deg, #a1ff75, #5eff00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; 
+  background-size: 100%;
+  background-repeat: repeat;
 }
 
 .App-link {
